@@ -149,7 +149,7 @@ const VaultSensors = (() => {
     el(acoustic?'startAcoustic':'startReceive').disabled=true;
     el(acoustic?'stopAcoustic':'stopReceive').disabled=false;
     if(!acoustic) {
-      decoder=new MorseDecoder(numeric('receiveUnit',60,1000,160));updateDecoded();
+      decoder=new MorseDecoder(numeric('receiveUnit',60,1200,300));updateDecoded();
       ['receiveMode','receiveUnit','receiveAutoFrequency','receiveFrequency','receiveThreshold','lightThreshold'].forEach(id=>el(id).disabled=true);
     }
     text(status,'En attente de l’autorisation du capteur…');

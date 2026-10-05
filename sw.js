@@ -1,5 +1,5 @@
-const CACHE = "vault-inventory-guides-6";
-const ASSETS = ["./","./index.html","./styles.css","./app.js","./sensors.js","./inventory.js","./guides.js","./manifest.webmanifest","./icon.svg"];
+const CACHE = "vault-torch-7";
+const ASSETS = ["./","./index.html","./styles.css","./app.js","./sensors.js","./torch.js","./inventory.js","./guides.js","./manifest.webmanifest","./icon.svg"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
   self.skipWaiting();

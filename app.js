@@ -40,9 +40,6 @@ const MORSE = {
 };
 
 let state = loadState();
-let signalTimer = null;
-let signalQueue = [];
-let signalIndex = 0;
 
 function loadState(){
   try{
@@ -233,29 +230,7 @@ function buildSignalQueue(morse){
   return q;
 }
 
-function stopSignal(){
-  if(signalTimer) clearTimeout(signalTimer);
-  signalTimer = null;
-  signalQueue = [];
-  signalIndex = 0;
-  document.getElementById("flashOverlay").style.opacity = "0";
-}
-
-function playNext(){
-  if(signalIndex >= signalQueue.length){ stopSignal(); return; }
-  const [on,units] = signalQueue[signalIndex++];
-  document.getElementById("flashOverlay").style.opacity = on ? "1" : "0";
-  signalTimer = setTimeout(playNext, units*160);
-}
-
-function playSignal(){
-  VaultSensors.stop();
-  stopSignal();
-  const morse = toMorse(document.getElementById("morseInput").value || "SOS");
-  signalQueue = buildSignalQueue(morse);
-  signalIndex = 0;
-  playNext();
-}
+function stopSignal(){ VaultTorch.stop(); }
 
 function activateView(target, focusPanel = false){
   const panel = document.getElementById(`panel-${target}`);
@@ -299,6 +274,7 @@ function bindNav(){
 
 function init(){
   VaultSensors.init();
+  VaultTorch.init();
   bindNav();
   bindInputs();
   VaultInventory.init(()=>state, ()=>{saveState(); render();});
@@ -313,11 +289,10 @@ function init(){
     document.getElementById("morseInput").value = b.dataset.value;
     updateMorse();
   }));
-  document.getElementById("playSignalBtn").addEventListener("click",playSignal);
-  document.getElementById("stopSignalBtn").addEventListener("click",stopSignal);
 
   document.getElementById("resetBtn").addEventListener("click",()=>{
     if(confirm("Réinitialiser toutes les données locales de VAULT ?")){
+      stopSignal(); VaultSensors.stop();
       state = {...DEFAULTS, checklist:{}, inventory:[]};
       VaultInventory.reset();
       VaultGuides.reset();
@@ -327,7 +302,7 @@ function init(){
     }
   });
 
-  window.addEventListener("pagehide",()=>VaultSensors.stop());
+  window.addEventListener("pagehide",()=>{stopSignal();VaultSensors.stop();});
   render();
   updateMorse();
 

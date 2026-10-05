@@ -20,7 +20,9 @@ Les coches des guides ne sont conservées que dans la session courante et sont e
 
 ## Signal Morse
 
-Émission par flashes de l’écran. Réception des bips au microphone ou des flashes avec la caméra. Vitesse du point réglable et traduction de points/traits saisis. Le lecteur a été testé sur des signaux simulés ; un échange réel entre téléphones reste à valider.
+Émission Morse par la lampe arrière du téléphone, si la caméra expose le contrôle de torche dans le navigateur. Aucun flash de l’écran. Vérifier la lampe, tester son allumage pendant une seconde, puis émettre. Après le test, la lampe s’éteint et la caméra reste prête pour l’émission jusqu’à l’arrêt ou au changement d’onglet. Vitesse initiale : un point de 300 ms, à régler de la même façon sur le téléphone receveur. Répétition facultative. Les commandes trop lentes interrompent le signal et demandent de ralentir. Un test sur deux téléphones réels reste nécessaire pour valider les flashes et la réception. Réception des bips au microphone ou des flashes avec la caméra. Vitesse du point réglable et traduction de points/traits saisis. Le lecteur a été testé sur des signaux simulés ; un échange réel entre téléphones reste à valider.
+
+Références techniques : [contrainte torch (MDN)](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#torch), [correctif WebKit concernant l’état de la torche](https://bugs.webkit.org/show_bug.cgi?id=280970). VAULT vérifie les capacités annoncées par la caméra et le résultat des commandes ; il ne se fie pas à getSettings().torch pour certifier l’allumage physique. Les pistes vidéo sont uniquement utilisées pour commander la lampe, sans traitement des images.
 
 ## Écoute acoustique
 
@@ -32,7 +34,7 @@ Les réserves, la checklist et le profil restent dans le stockage local du navig
 
 Microphone et caméra : accès seulement après action explicite et autorisation du navigateur. Arrêt automatique en quittant le module ou en masquant la page. HTTPS ou localhost nécessaire.
 
-Les modules sont mis en cache pour l’utilisation hors ligne après un premier chargement réussi. Les appels et SMS nécessitent un service téléphonique disponible. Le signal émis utilise l’écran, pas la torche.
+Les modules sont mis en cache pour l’utilisation hors ligne après un premier chargement réussi. Les appels et SMS nécessitent un service téléphonique disponible. L’émission nécessite une torche accessible par la caméra : la compatibilité dépend du téléphone et du navigateur. La lampe est arrêtée et la caméra libérée à la fin, sur Arrêter, lors d’un changement d’onglet, au masquage de la page ou en cas d’erreur. Garder le téléphone déverrouillé et l’application visible. Low Profile ne réduit pas la puissance de la lampe.
 
 ## GitHub Pages
 

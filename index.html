@@ -228,17 +228,28 @@
             <div class="card-label">TRADUCTION</div>
             <div id="morseOutput" class="morse-output">—</div>
           </div>
-          <div class="signal-controls">
-            <button id="playSignalBtn" class="primary-btn">▶ Lancer le signal visuel</button>
-            <button id="stopSignalBtn" class="ghost-btn">Arrêter</button>
+          <div class="two-col">
+            <label>Durée d’un point (ms)<input id="sendUnit" type="number" min="100" max="1200" step="10" value="300"></label>
+            <label id="torchCameraLabel" hidden>Caméra associée à la lampe<select id="torchCamera"><option value="">Caméra arrière automatique</option></select></label>
           </div>
-          <p class="tiny muted">Cette V1 simule le flash à l'écran. Le contrôle réel de la torche sera ajouté dans la version native iOS/Android.</p>
+          <label class="check-item"><input id="repeatSignal" type="checkbox"><span>Répéter le message jusqu’à l’arrêt</span></label>
+          <div class="signal-controls">
+            <button id="prepareTorch" class="ghost-btn">1. Vérifier ma lampe</button>
+            <button id="testTorch" class="ghost-btn" disabled>Tester la lampe · 1 s</button>
+            <button id="playSignalBtn" class="primary-btn" disabled>2. Émettre avec la lampe</button>
+            <button id="stopSignalBtn" class="ghost-btn" disabled>Arrêter / libérer la caméra</button>
+          </div>
+          <p id="torchStatus" class="sensor-status muted" role="status">Lampe arrêtée. Vérifie sa disponibilité sur ce téléphone.</p>
+          <p class="tiny muted">La lampe arrière envoie le Morse. L’accès à la caméra est nécessaire pour la commander ; aucune image n’est enregistrée ni envoyée.</p>
+          <p class="tiny muted">Garde le téléphone déverrouillé et VAULT visible. Quitter cet onglet, masquer l’application ou toucher Arrêter coupe la lampe et libère la caméra. Low Profile assombrit l’interface ; la lampe reste lumineuse.</p>
+          <p class="tiny muted">Règle les deux téléphones sur la même durée de point (300 ms au départ). Si la torche n’est pas accessible depuis ce navigateur, VAULT le signale. La réception des flashes se fait avec la caméra de l’autre téléphone.</p>
+          <video id="torchVideo" class="torch-video" autoplay muted playsinline aria-hidden="true" tabindex="-1"></video>
         </article>        <article class="card" id="receiveMorsePanel" hidden>
   <div class="card-label">RECEVOIR UNE RÉPONSE</div><h3>Lecteur de Morse</h3>
   <p class="muted">Écoute des bips réguliers ou vise les flashes avec la caméra. Le message s’affiche au fil de la réception.</p>
   <div class="two-col">
     <label>Source du Morse<select id="receiveMode"><option value="audio">Microphone — bips</option><option value="camera">Caméra — flashes</option></select></label>
-    <label>Durée d’un point (ms)<input id="receiveUnit" type="number" min="60" max="1000" step="10" value="160"></label>
+    <label>Durée d’un point (ms)<input id="receiveUnit" type="number" min="60" max="1200" step="10" value="300"></label>
   </div>
   <div id="audioSettings"><label class="check-item"><input id="receiveAutoFrequency" type="checkbox" checked><span>Repérer automatiquement la fréquence du bip</span></label><div class="two-col">
     <label>Fréquence du bip (Hz)<input id="receiveFrequency" disabled type="number" min="200" max="3000" step="50" value="700"></label>
@@ -252,7 +263,7 @@
   <div class="sensor-indicator"><span id="receiveLamp" class="receive-lamp" aria-hidden="true"></span><span id="receiveLevel">Aucun signal</span></div>
   <div class="meter"><span id="receiveMeter"></span></div>
   <div class="morse-output-wrap"><div class="card-label">MORSE REÇU</div><div id="receivedMorse" class="morse-output">—</div><div class="card-label result-label">MESSAGE TRADUIT</div><div id="receivedText" class="received-text" aria-live="polite" aria-atomic="true">—</div></div>
-  <p class="tiny muted">Réglage initial : un point de 160 ms, comme l’émetteur VAULT. Ajuste la durée à l’émetteur reçu. Les bruits, les reflets et les flashes irréguliers peuvent produire des erreurs ; « ? » indique une séquence inconnue.</p>
+  <p class="tiny muted">Réglage initial : un point de 300 ms, comme l’émetteur VAULT. Ajuste la durée à l’émetteur reçu. Les bruits, les reflets et les flashes irréguliers peuvent produire des erreurs ; « ? » indique une séquence inconnue.</p>
   <p class="tiny muted">Les capteurs s’arrêtent en quittant cet onglet ou en masquant l’application. Rien n’est enregistré ni envoyé.</p>
   <details class="manual-reader"><summary>Traduire des points et traits saisis</summary><label>Morse à traduire<textarea id="manualMorse" rows="2" placeholder="... --- ... / --- -.-"></textarea></label><p class="tiny muted">Espace entre les lettres, / entre les mots.</p><output id="manualTranslation" class="received-text">—</output></details>
 </article></section>
@@ -357,8 +368,9 @@
 <nav class="bottom-nav" role="tablist" aria-label="Modules VAULT"><button class="nav-item active" id="tab-home" role="tab" aria-controls="panel-home" aria-selected="true" tabindex="0" data-target="home"><span aria-hidden="true">⌂</span><small>Accueil</small></button><button class="nav-item" id="tab-stock" role="tab" aria-controls="panel-stock" aria-selected="false" tabindex="-1" data-target="stock"><span aria-hidden="true">▦</span><small>Stock / Autonomie</small></button><button class="nav-item" id="tab-checklist" role="tab" aria-controls="panel-checklist" aria-selected="false" tabindex="-1" data-target="checklist"><span aria-hidden="true">✓</span><small>Checklist 72 h</small></button><button class="nav-item" id="tab-emergency" role="tab" aria-controls="panel-emergency" aria-selected="false" tabindex="-1" data-target="emergency"><span aria-hidden="true">☎</span><small>Urgences</small></button><button class="nav-item" id="tab-signal" role="tab" aria-controls="panel-signal" aria-selected="false" tabindex="-1" data-target="signal"><span aria-hidden="true">⌁</span><small>Signal Morse</small></button><button class="nav-item" id="tab-acoustic" role="tab" aria-controls="panel-acoustic" aria-selected="false" tabindex="-1" data-target="acoustic"><span aria-hidden="true">◉</span><small>Écoute</small></button><button class="nav-item" id="tab-guides" role="tab" aria-controls="panel-guides" aria-selected="false" tabindex="-1" data-target="guides"><span aria-hidden="true">≡</span><small>Guides</small></button><button class="nav-item" id="tab-profile" role="tab" aria-controls="panel-profile" aria-selected="false" tabindex="-1" data-target="profile"><span aria-hidden="true">◎</span><small>Profil</small></button></nav>
   </div>
 
-  <div id="flashOverlay" aria-hidden="true"></div>
+  
   <script src="sensors.js"></script>
+  <script src="torch.js"></script>
   <script src="inventory.js"></script>
   <script src="guides.js"></script>
   <script src="app.js"></script>
