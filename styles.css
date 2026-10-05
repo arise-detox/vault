@@ -181,3 +181,45 @@ button:disabled{opacity:.5;cursor:not-allowed;}
 body.low-profile .camera-frame video{filter:brightness(.35)}
 
 .ghost-btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);}
+
+.nutrition-grid,.nutrition-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px;}
+.nutrition-metric{padding:14px 12px;border:1px solid var(--line);border-radius:14px;background:var(--bg);min-width:0;}
+.nutrition-metric strong{display:block;font-size:23px;font-variant-numeric:tabular-nums;margin:9px 0;overflow-wrap:anywhere;}
+.nutrition-metric strong small{font-size:12px;color:var(--muted);font-weight:400;}
+.nutrition-metric .card-label{letter-spacing:.04em;}
+.food-editor{border:1px solid var(--line);border-radius:16px;padding:10px 14px;margin-top:20px;background:var(--bg);}
+.food-editor summary{font-weight:600;font-size:16px;}
+.food-editor .card-label{margin-top:22px;}
+.food-editor .nutrition-fields{margin-top:0;}
+.inventory-heading{margin-top:24px;}
+.food-list{display:grid;gap:12px;margin-top:14px;}
+.food-row{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--bg);min-width:0;}
+.food-row h4{margin:0;font-size:17px;overflow-wrap:anywhere;}
+.food-row-controls{display:grid;grid-template-columns:1fr 100px;gap:16px;align-items:end;}
+.food-row-controls .check-item{min-height:48px;}
+.food-row-total{margin:8px 0;font-size:14px;}
+.source-link{color:var(--accent);text-decoration:underline;text-underline-offset:3px;line-height:1.6;}
+.guide-select{text-align:left;color:var(--text);font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:10px;min-height:185px;}
+.guide-select strong{font-size:19px;}
+.guide-select .muted{font-size:14px;line-height:1.5;}
+.guide-open{font-size:14px;color:var(--accent);margin-top:auto;}
+.guide-select:hover{border-color:var(--accent);}
+.guide-question{font-weight:600;font-size:18px;margin-top:22px;}
+.guide-choices{display:grid;gap:10px;}
+.guide-choices button{text-align:left;min-height:48px;line-height:1.4;}
+.journey-nav{border-top:1px solid var(--line);padding-top:18px;margin-top:22px;}
+.guide-sources{border-top:1px solid var(--line);padding-top:18px;margin-top:20px;}
+.guide-sources a{display:block;font-size:13px;margin-top:8px;}
+#guideTrail{overflow-wrap:anywhere;line-height:1.5;}
+#guideStep{margin-top:20px;scroll-margin-top:100px;}
+.food-row .section-title-row{align-items:flex-start;}
+.food-row .section-title-row>span{text-align:right;flex-shrink:0;}
+@media(max-width:640px){
+  .nutrition-grid,.nutrition-fields{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .guide-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .guide-select{padding:14px;min-height:200px;}
+  .guide-select strong{font-size:17px;}
+  .food-editor{padding:8px 12px;}
+  .food-row .section-title-row{flex-direction:column;gap:4px;}
+}
+@media(max-width:360px){.guide-grid{grid-template-columns:1fr;}.guide-select{min-height:150px;}}

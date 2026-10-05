@@ -10,7 +10,10 @@ const DEFAULTS = {
   housing: "Appartement",
   zone: "Urbaine",
   lowProfile: false,
-  checklist: {}
+  checklist: {},
+  foodMode: "total",
+  noCooking: false,
+  inventory: []
 };
 
 const CHECKLIST_ITEMS = [
@@ -43,8 +46,13 @@ let signalIndex = 0;
 
 function loadState(){
   try{
-    return {...DEFAULTS, ...JSON.parse(localStorage.getItem("vaultState") || "{}")};
-  }catch(e){ return {...DEFAULTS}; }
+    const loaded = JSON.parse(localStorage.getItem("vaultState") || "{}");
+    const data = {...DEFAULTS, ...(loaded && typeof loaded === "object" && !Array.isArray(loaded) ? loaded : {})};
+    data.checklist = data.checklist && typeof data.checklist === "object" ? data.checklist : {};
+    data.inventory = VaultInventory.normalize(data.inventory);
+    data.foodMode = data.foodMode === "inventory" ? "inventory" : "total";
+    return data;
+  }catch(e){ return {...DEFAULTS, checklist:{}, inventory:[]}; }
 }
 function saveState(){
   localStorage.setItem("vaultState", JSON.stringify(state));
@@ -55,7 +63,7 @@ function fmt(n){ return Number.isFinite(n) ? n.toFixed(1) : "0.0"; }
 function calc(){
   const people = Math.max(1, Number(state.people) || 1);
   const waterDays = (Number(state.waterLiters)||0) / (people * Math.max(.1,Number(state.waterPerPerson)||2));
-  const foodDays = (Number(state.foodKcal)||0) / (people * Math.max(1,Number(state.kcalPerPerson)||2000));
+  const foodDays = VaultInventory.effectiveCalories(state) / (people * Math.max(1,Number(state.kcalPerPerson)||2000));
   const energyDays = (Number(state.powerMah)||0) / Math.max(1,Number(state.dailyMah)||2500);
   const autonomy = Math.max(0, Math.min(waterDays, foodDays, energyDays));
 
@@ -121,6 +129,7 @@ function render(){
   renderChecklist();
   syncInputs();
   applyLowProfile();
+  VaultInventory.render();
 }
 
 function renderChecklist(){
@@ -292,6 +301,8 @@ function init(){
   VaultSensors.init();
   bindNav();
   bindInputs();
+  VaultInventory.init(()=>state, ()=>{saveState(); render();});
+  VaultGuides.init(activateView);
   document.getElementById("lowProfileBtn").addEventListener("click",toggleLowProfile);
   document.getElementById("lowProfileToggle").addEventListener("change",e=>{
     state.lowProfile = e.target.checked; saveState(); applyLowProfile();
@@ -307,7 +318,9 @@ function init(){
 
   document.getElementById("resetBtn").addEventListener("click",()=>{
     if(confirm("Réinitialiser toutes les données locales de VAULT ?")){
-      state = {...DEFAULTS, checklist:{}};
+      state = {...DEFAULTS, checklist:{}, inventory:[]};
+      VaultInventory.reset();
+      VaultGuides.reset();
       saveState(); render();
       document.getElementById("morseInput").value = "";
       updateMorse();
