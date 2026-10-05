@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0c0b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="VAULT" />
+  <title>VAULT — Préparation & autonomie</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">PREPAREDNESS SYSTEM</div>
+        <h1>VAULT</h1>
+      </div>
+      <button id="lowProfileBtn" class="icon-btn" aria-label="Mode Low Profile" aria-pressed="false" title="Mode Low Profile">
+        ◐
+      </button>
+    </header>
+
+    <main id="app"><section class="view active" data-view="home" id="panel-home" role="tabpanel" aria-labelledby="tab-home" tabindex="0"><div class="section-heading"><div><div class="eyebrow">VUE D’ENSEMBLE</div><h2>Accueil</h2></div></div>
+        <div class="hero-grid">
+          <article class="card hero">
+            <div class="card-label">PRÉPARATION</div>
+            <div class="score-wrap">
+              <div id="prepScore" class="big-score">0</div>
+              <div class="score-denom">/100</div>
+            </div>
+            <div class="meter"><span id="prepMeter"></span></div>
+            <div id="prepHint" class="muted">Complète ton profil et ton stock.</div>
+          </article>
+
+          <article class="card hero">
+            <div class="card-label">AUTONOMIE ESTIMÉE</div>
+            <div class="autonomy-line">
+              <span id="autonomyDays" class="big-number">0.0</span>
+              <span class="unit">jours</span>
+            </div>
+            <div id="criticalResource" class="status-chip warning">Ressource critique : —</div>
+          </article>
+        </div>
+
+        <div class="resource-grid">
+          <article class="card compact">
+            <div class="card-label">EAU</div>
+            <div><span id="homeWaterDays" class="metric">0.0</span> <span class="unit">j</span></div>
+          </article>
+          <article class="card compact">
+            <div class="card-label">NOURRITURE</div>
+            <div><span id="homeFoodDays" class="metric">0.0</span> <span class="unit">j</span></div>
+          </article>
+          <article class="card compact">
+            <div class="card-label">ÉNERGIE</div>
+            <div><span id="homeEnergyDays" class="metric">0.0</span> <span class="unit">j</span></div>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="section-title-row">
+            <div>
+              <div class="card-label">ACTION PRIORITAIRE</div>
+              <h2 id="priorityTitle">Configurer VAULT</h2>
+            </div>
+            <span class="dot"></span>
+          </div>
+          <p id="priorityText" class="muted">Renseigne ton foyer, puis ajoute tes réserves.</p>
+        </article>
+
+        <article class="card">
+          <div class="section-title-row">
+            <div>
+              <div class="card-label">CHECKLIST 72 H</div>
+              <h2><span id="checklistCount">0</span>/<span id="checklistTotal">0</span> prêts</h2>
+            </div>
+          </div>
+          <div id="homeChecklist" class="mini-list"></div><button class="ghost-btn section-link" data-go="checklist">Voir la checklist complète</button>
+        </article>
+      <div class="quick-actions home-actions"><button class="ghost-btn" data-go="stock">Modifier mes réserves</button><button class="ghost-btn" data-go="emergency">Numéros d’urgence</button><button class="ghost-btn" data-go="signal">Signal Morse</button></div></section>
+<section class="view" data-view="stock" id="panel-stock" role="tabpanel" aria-labelledby="tab-stock" tabindex="0" hidden>
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">RESSOURCES</div>
+            <h2>Stock / Autonomie</h2>
+          </div>
+        </div>
+
+<article class="card">
+            <div class="card-label">CIBLE</div>
+            <label>Objectif d'autonomie (jours)
+              <input id="targetDaysInput" type="number" min="1" step="1" />
+            </label>
+          </article>
+<article class="card resource-editor">
+          <div class="resource-head">
+            <div>
+              <div class="card-label">EAU</div>
+              <h3><span id="waterDays">0.0</span> jours</h3>
+            </div>
+            <div class="resource-icon">◌</div>
+          </div>
+          <div class="two-col">
+            <label>Litres disponibles
+              <input id="waterLitersInput" type="number" min="0" step="0.5" />
+            </label>
+            <label>Besoin / personne / jour (L)
+              <input id="waterPerPersonInput" type="number" min="0.5" step="0.1" />
+            </label>
+          </div>
+          <div class="meter"><span id="waterMeter"></span></div>
+        </article>
+
+          
+        <article class="card resource-editor">
+          <div class="resource-head">
+            <div>
+              <div class="card-label">NOURRITURE</div>
+              <h3><span id="foodDays">0.0</span> jours</h3>
+            </div>
+            <div class="resource-icon">▦</div>
+          </div>
+          <div class="two-col">
+            <label>Calories disponibles
+              <input id="foodKcalInput" type="number" min="0" step="100" />
+            </label>
+            <label>Besoin / personne / jour (kcal)
+              <input id="kcalPerPersonInput" type="number" min="800" step="50" />
+            </label>
+          </div>
+          <div class="meter"><span id="foodMeter"></span></div>
+        </article>
+
+        <article class="card resource-editor">
+          <div class="resource-head">
+            <div>
+              <div class="card-label">ÉNERGIE</div>
+              <h3><span id="energyDays">0.0</span> jours</h3>
+            </div>
+            <div class="resource-icon">ϟ</div>
+          </div>
+          <div class="two-col">
+            <label>Réserve externe (mAh)
+              <input id="powerMahInput" type="number" min="0" step="1000" />
+            </label>
+            <label>Consommation / jour (mAh)
+              <input id="dailyMahInput" type="number" min="100" step="100" />
+            </label>
+          </div>
+          <div class="meter"><span id="energyMeter"></span></div>
+        </article>
+
+
+      </section>
+<section class="view" data-view="checklist" id="panel-checklist" role="tabpanel" aria-labelledby="tab-checklist" tabindex="0" hidden>
+        <div class="section-heading"><div><div class="eyebrow">PRÉPARER</div><h2>Checklist 72 h</h2></div></div>
+        <article class="card"><div class="section-title-row"><h3>Mon kit</h3><span id="kitProgress" class="status-chip"></span></div>
+        <p class="muted">Coche chaque élément une fois préparé. La progression contribue au score de préparation.</p>
+        <div class="meter"><span id="kitMeter"></span></div><div id="checklist" class="checklist"></div></article>
+</section>
+<section class="view" data-view="emergency" id="panel-emergency" role="tabpanel" aria-labelledby="tab-emergency" tabindex="0" hidden><div class="section-heading"><div><div class="eyebrow">CONTACTER</div><h2>Urgences</h2></div></div>        <article class="card emergency-card">
+          <div class="card-label">URGENCES — FRANCE</div>
+          <div class="emergency-grid">
+            <a class="emergency-btn" href="tel:112"><span>112</span><small>Urgence UE</small></a>
+            <a class="emergency-btn" href="tel:15"><span>15</span><small>SAMU</small></a>
+            <a class="emergency-btn" href="tel:17"><span>17</span><small>Police / Gendarmerie</small></a>
+            <a class="emergency-btn" href="tel:18"><span>18</span><small>Pompiers</small></a>
+            <a class="emergency-btn wide" href="sms:114"><span>114</span><small>Urgence par SMS / accessibilité</small></a>
+          </div>
+        </article></section>
+<section class="view" data-view="signal" id="panel-signal" role="tabpanel" aria-labelledby="tab-signal" tabindex="0" hidden><div class="section-heading"><div><div class="eyebrow">SIGNALER</div><h2>Signal Morse</h2></div></div><div class="quick-actions" aria-label="Sens du signal"><button id="showSend" class="ghost-btn" aria-pressed="true">Émettre</button><button id="showReceive" class="ghost-btn" aria-pressed="false">Recevoir</button></div>        <article class="card" id="sendMorsePanel">
+          <div class="card-label">SIGNAL MORSE</div>
+          <label>Message
+            <textarea id="morseInput" rows="3" placeholder="Ex. BESOIN AIDE"></textarea>
+          </label>
+          <div class="quick-actions">
+            <button class="ghost-btn morse-preset" data-value="SOS">SOS</button>
+            <button class="ghost-btn morse-preset" data-value="AIDE">AIDE</button>
+            <button class="ghost-btn morse-preset" data-value="OK">OK</button>
+            <button class="ghost-btn morse-preset" data-value="OUI">OUI</button>
+            <button class="ghost-btn morse-preset" data-value="NON">NON</button>
+          </div>
+          <div class="morse-output-wrap">
+            <div class="card-label">TRADUCTION</div>
+            <div id="morseOutput" class="morse-output">—</div>
+          </div>
+          <div class="signal-controls">
+            <button id="playSignalBtn" class="primary-btn">▶ Lancer le signal visuel</button>
+            <button id="stopSignalBtn" class="ghost-btn">Arrêter</button>
+          </div>
+          <p class="tiny muted">Cette V1 simule le flash à l'écran. Le contrôle réel de la torche sera ajouté dans la version native iOS/Android.</p>
+        </article>        <article class="card" id="receiveMorsePanel" hidden>
+  <div class="card-label">RECEVOIR UNE RÉPONSE</div><h3>Lecteur de Morse</h3>
+  <p class="muted">Écoute des bips réguliers ou vise les flashes avec la caméra. Le message s’affiche au fil de la réception.</p>
+  <div class="two-col">
+    <label>Source du Morse<select id="receiveMode"><option value="audio">Microphone — bips</option><option value="camera">Caméra — flashes</option></select></label>
+    <label>Durée d’un point (ms)<input id="receiveUnit" type="number" min="60" max="1000" step="10" value="160"></label>
+  </div>
+  <div id="audioSettings"><label class="check-item"><input id="receiveAutoFrequency" type="checkbox" checked><span>Repérer automatiquement la fréquence du bip</span></label><div class="two-col">
+    <label>Fréquence du bip (Hz)<input id="receiveFrequency" disabled type="number" min="200" max="3000" step="50" value="700"></label>
+    <label>Seuil sonore<input id="receiveThreshold" type="range" min="-80" max="-15" step="1" value="-45"><span id="audioThresholdLabel" class="tiny">−45 dBFS · baisse le seuil pour un bip faible</span></label>
+  </div></div>
+  <div id="cameraSettings" hidden><label>Seuil de luminosité<input id="lightThreshold" type="range" min="5" max="95" value="60"><span id="lightThresholdLabel" class="tiny">60 % · vise la lumière au centre du cadre</span></label>
+    <div class="camera-frame" id="cameraFrame" hidden><video id="receiveVideo" autoplay muted playsinline></video><span class="camera-reticle" aria-hidden="true"></span></div>
+  </div>
+  <div class="signal-controls"><button id="startReceive" class="primary-btn">Commencer la réception</button><button id="stopReceive" class="ghost-btn" disabled>Arrêter</button><button id="clearReceive" class="ghost-btn">Effacer</button></div>
+  <p id="receiveStatus" class="sensor-status muted" role="status">Prêt. Microphone et caméra arrêtés.</p>
+  <div class="sensor-indicator"><span id="receiveLamp" class="receive-lamp" aria-hidden="true"></span><span id="receiveLevel">Aucun signal</span></div>
+  <div class="meter"><span id="receiveMeter"></span></div>
+  <div class="morse-output-wrap"><div class="card-label">MORSE REÇU</div><div id="receivedMorse" class="morse-output">—</div><div class="card-label result-label">MESSAGE TRADUIT</div><div id="receivedText" class="received-text" aria-live="polite" aria-atomic="true">—</div></div>
+  <p class="tiny muted">Réglage initial : un point de 160 ms, comme l’émetteur VAULT. Ajuste la durée à l’émetteur reçu. Les bruits, les reflets et les flashes irréguliers peuvent produire des erreurs ; « ? » indique une séquence inconnue.</p>
+  <p class="tiny muted">Les capteurs s’arrêtent en quittant cet onglet ou en masquant l’application. Rien n’est enregistré ni envoyé.</p>
+  <details class="manual-reader"><summary>Traduire des points et traits saisis</summary><label>Morse à traduire<textarea id="manualMorse" rows="2" placeholder="... --- ... / --- -.-"></textarea></label><p class="tiny muted">Espace entre les lettres, / entre les mots.</p><output id="manualTranslation" class="received-text">—</output></details>
+</article></section>
+<section class="view" data-view="acoustic" id="panel-acoustic" role="tabpanel" aria-labelledby="tab-acoustic" tabindex="0" hidden>
+ <div class="section-heading"><div><div class="eyebrow">MICROPHONE</div><h2>Écoute acoustique</h2></div></div>
+ <article class="card"><div class="card-label">ENVIRONNEMENT SONORE</div><h3>Analyser les sons autour de moi</h3>
+ <p class="muted">Repère un bruit diffus, une tonalité stable ou des harmoniques persistantes pouvant correspondre à un moteur.</p>
+ <div class="signal-controls"><button id="startAcoustic" class="primary-btn">Démarrer l’écoute</button><button id="stopAcoustic" class="ghost-btn" disabled>Arrêter</button></div>
+ <p id="acousticStatus" class="sensor-status muted" role="status">Microphone arrêté.</p>
+ <div class="meter"><span id="acousticMeter"></span></div>
+ <div class="acoustic-result"><div class="card-label">OBSERVATION</div><h3 id="acousticResult">En attente d’écoute</h3><p id="acousticDetail" class="muted">Laisse le microphone écouter quelques secondes.</p></div>
+ <div class="two-col acoustic-metrics"><div><div class="card-label">NIVEAU DU MICRO</div><span id="acousticLevel">—</span></div><div><div class="card-label">FRÉQUENCE DOMINANTE</div><span id="acousticPeak">—</span></div></div>
+ <p class="tiny muted">Niveau relatif au microphone, non calibré : ce n’est pas une mesure du volume ambiant en décibels acoustiques.</p>
+ </article>
+ <article class="card"><div class="card-label">IDENTIFICATION DE DRONE</div><h3>Source non identifiable avec certitude</h3><p class="muted">Un drone, un ventilateur et un véhicule peuvent produire des signatures proches. Cette analyse spectrale expérimentale relève des indices sonores ; elle ne confirme pas la présence ou l’absence d’un drone.</p><p class="tiny muted">Traitement en direct sur cet appareil. Aucun enregistrement, aucun envoi. Quitter cet onglet ou masquer l’application coupe le microphone.</p></article>
+</section>
+<section class="view" data-view="guides" id="panel-guides" role="tabpanel" aria-labelledby="tab-guides" tabindex="0" hidden>
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">HORS LIGNE</div>
+            <h2>Guides</h2>
+          </div>
+        </div>
+
+        <div class="guide-grid">
+          <article class="card guide-card">
+            <div class="guide-index">01</div>
+            <h3>Panne électrique</h3>
+            <p>Réduis les consommations, garde le réfrigérateur fermé, conserve une lampe indépendante et limite les usages du téléphone.</p>
+          </article>
+          <article class="card guide-card">
+            <div class="guide-index">02</div>
+            <h3>Eau</h3>
+            <p>Protège d'abord ton stock potable. Sépare eau potable et eau technique. En cas de doute, préfère une source sûre ou un traitement adapté.</p>
+          </article>
+          <article class="card guide-card">
+            <div class="guide-index">03</div>
+            <h3>Évacuation</h3>
+            <p>Prends documents essentiels, traitements, eau, alimentation compacte, éclairage, énergie et moyens de communication.</p>
+          </article>
+          <article class="card guide-card">
+            <div class="guide-index">04</div>
+            <h3>Communication</h3>
+            <p>Économise la batterie, privilégie les messages courts et conserve les numéros importants hors ligne.</p>
+          </article>
+        </div>
+      </section>
+<section class="view" data-view="profile" id="panel-profile" role="tabpanel" aria-labelledby="tab-profile" tabindex="0" hidden>
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">CONFIGURATION</div>
+            <h2>Profil</h2>
+          </div>
+        </div>
+
+          <article class="card">
+            <div class="card-label">FOYER</div>
+            <label>Nombre de personnes
+              <input id="peopleInput" type="number" min="1" step="1" />
+            </label>
+          </article>
+        <article class="card">
+          <div class="card-label">ENVIRONNEMENT</div>
+          <div class="two-col">
+            <label>Type de logement
+              <select id="housingInput">
+                <option>Appartement</option>
+                <option>Maison</option>
+                <option>Autre</option>
+              </select>
+            </label>
+            <label>Zone
+              <select id="zoneInput">
+                <option>Urbaine</option>
+                <option>Périurbaine</option>
+                <option>Rurale</option>
+                <option>Montagne</option>
+                <option>Littoral</option>
+              </select>
+            </label>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-label">APPARENCE</div>
+          <div class="toggle-row">
+            <div>
+              <h3>Low Profile</h3>
+              <p class="muted">Réduit les contrastes, couleurs et effets lumineux.</p>
+            </div>
+            <label class="switch">
+              <input id="lowProfileToggle" type="checkbox" aria-label="Activer Low Profile">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-label">DONNÉES</div>
+          <button id="resetBtn" class="danger-ghost">Réinitialiser VAULT</button>
+        </article>
+
+        <article class="card">
+          <div class="card-label">V1</div>
+          <p class="muted">Données stockées uniquement dans ce navigateur. Fonctionne hors ligne après le premier chargement si le site est servi en HTTPS.</p>
+        </article>
+      </section></main>
+
+<nav class="bottom-nav" role="tablist" aria-label="Modules VAULT"><button class="nav-item active" id="tab-home" role="tab" aria-controls="panel-home" aria-selected="true" tabindex="0" data-target="home"><span aria-hidden="true">⌂</span><small>Accueil</small></button><button class="nav-item" id="tab-stock" role="tab" aria-controls="panel-stock" aria-selected="false" tabindex="-1" data-target="stock"><span aria-hidden="true">▦</span><small>Stock / Autonomie</small></button><button class="nav-item" id="tab-checklist" role="tab" aria-controls="panel-checklist" aria-selected="false" tabindex="-1" data-target="checklist"><span aria-hidden="true">✓</span><small>Checklist 72 h</small></button><button class="nav-item" id="tab-emergency" role="tab" aria-controls="panel-emergency" aria-selected="false" tabindex="-1" data-target="emergency"><span aria-hidden="true">☎</span><small>Urgences</small></button><button class="nav-item" id="tab-signal" role="tab" aria-controls="panel-signal" aria-selected="false" tabindex="-1" data-target="signal"><span aria-hidden="true">⌁</span><small>Signal Morse</small></button><button class="nav-item" id="tab-acoustic" role="tab" aria-controls="panel-acoustic" aria-selected="false" tabindex="-1" data-target="acoustic"><span aria-hidden="true">◉</span><small>Écoute</small></button><button class="nav-item" id="tab-guides" role="tab" aria-controls="panel-guides" aria-selected="false" tabindex="-1" data-target="guides"><span aria-hidden="true">≡</span><small>Guides</small></button><button class="nav-item" id="tab-profile" role="tab" aria-controls="panel-profile" aria-selected="false" tabindex="-1" data-target="profile"><span aria-hidden="true">◎</span><small>Profil</small></button></nav>
+  </div>
+
+  <div id="flashOverlay" aria-hidden="true"></div>
+  <script src="sensors.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
