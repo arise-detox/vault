@@ -1,45 +1,53 @@
 # VAULT
 
-Application web de préparation aux situations d’urgence : stock et autonomie, checklist 72 h, numéros d’urgence français, guides, profil et mode Low Profile.
+Application web de préparation aux situations d’urgence : autonomie en eau, nourriture et énergie, kit 72 h, numéros d’urgence français, guides pas à pas, signal Morse et outils d’orientation. Elle fonctionne **hors ligne** et **rien ne quitte ton téléphone**.
 
 Lien public : https://arise-detox.github.io/vault/
 
-## Inventaire alimentaire et nutrition
+## Ce que contient VAULT 2
 
-Dans Stock / Autonomie, sélectionner « Par aliment — mon inventaire ». Ajouter le nombre d’unités, le poids consommable par unité et les valeurs de l’étiquette pour 100 g : calories, protéines, glucides, lipides, fibres et sel. Les nutriments facultatifs laissés vides sont inconnus ; les totaux incomplets sont signalés.
+| Écran | Contenu |
+| --- | --- |
+| **Accueil** | Autonomie estimée (anneau eau / nourriture / énergie), score de préparation, actions prioritaires (dates dépassées, contrôles en retard, kit incomplet…), accès rapides. À la première ouverture, rien n’est supposé : l’accueil affiche 0 et propose quatre premiers pas. |
+| **Préparer › Stock** | Réserves d’eau, de nourriture et d’énergie comparées à l’objectif en jours. Inventaire alimentaire avec dates DLC / DDM (une DLC dépassée n’est jamais comptée), apports en calories, protéines, glucides, lipides, fibres et sel, modèles d’aliments indicatifs, liste d’achats copiable ou imprimable. |
+| **Préparer › Kit 72 h** | Checklist de 12 éléments de base, besoins du foyer (bébé, enfant, senior, animaux, santé), 14 compléments, éléments personnels, contrôles périodiques (eau, dates, piles, batterie, médicaments, documents) avec rappels. |
+| **Préparer › Plan** | Contacts à prévenir, points de rendez-vous, emplacement des coupures (gaz, eau, électricité), documents ; plan imprimable. |
+| **Guides** | 23 parcours en 5 catégories (danger immédiat, premiers secours, risques naturels, réseaux et ressources, alertes et départ), 104 étapes, 37 questions, 30 sources officielles ; recherche, reprise d’un parcours interrompu, bouton d’appel du 112 sur les gestes vitaux ; impression d’un guide ou **dossier papier** (numéros, fiche d’urgence, plan, gestes qui sauvent) à ranger dans le kit. |
+| **Urgences** | 112, 15, 17, 18, 114 par SMS, autres numéros utiles ; message prêt à lire ou à envoyer (nature, adresse, personnes, position GPS) ; fiche vitale (groupe sanguin, allergies, traitements, personne à prévenir) lisible en un geste et imprimable. |
+| **Outils › Signal Morse** | Émettre par la lampe, le son et la vibration (ensemble ou séparément), lire des bips au microphone ou des flashs à la caméra, apprendre l’alphabet et traduire. |
+| **Outils › Alarme sonore** | Sirène, signal de détresse en montagne (six coups par minute), balise. |
+| **Outils › Écoute acoustique** | Niveau, fréquence dominante, spectre et observation prudente (expérimental). |
+| **Outils › Position et boussole** | Coordonnées GPS à copier ou partager, boussole, points enregistrés (voiture, camp, point d’eau…) avec distance et cap, sans réseau. |
+| **Outils › Codes** | Alphabets d’épellation (français, international), signaux de détresse, signes à tracer au sol. |
+| **Réglages** | Thème automatique, sombre, clair, mode nuit (tout en rouge), Low Profile, taille du texte, sauvegarde et restauration, installation, mises à jour. |
 
-Cocher « En stock » pour compter une ligne ; les aliments décochés restent dans la liste d’achats. Le filtre « sans cuisson » exclut les aliments nécessitant une cuisson. Les dates sont des rappels à vérifier, sans certification de sécurité alimentaire. Modifier, supprimer ou ajuster les unités actualise les calculs.
+## Confidentialité
 
-Le calcul par aliment remplace la saisie globale, sans additionner les deux. Les anciens stocks restent en mode global lors de la mise à jour. Les apports par personne et par jour correspondent à une répartition des réserves sur l’objectif choisi ; ils ne représentent pas une recommandation nutritionnelle. L’autonomie alimentaire reste une estimation calorique. Vitamines et minéraux ne sont pas évalués.
+- Aucun compte, aucune statistique, aucun cookie, aucun serveur : l’application n’envoie rien.
+- Les données (stock, kit, contacts, fiche vitale, points) sont enregistrées dans le stockage du navigateur de ton téléphone. **Effacer les données du navigateur ou changer de téléphone efface aussi VAULT** : exporte de temps en temps une sauvegarde (Réglages) et garde-la ailleurs.
+- Micro, caméra et position ne servent qu’à l’outil ouvert, après ton autorisation, sans enregistrement. Tout s’arrête en quittant l’outil, en changeant d’onglet ou quand la page est masquée.
+- Politique de sécurité stricte (CSP) : aucun script externe, aucune requête vers un autre site.
 
-## Guides par situation
+## Hors ligne, installation, mises à jour
 
-Dix parcours : panne électrique, eau indisponible, inondation, incendie, alerte industrielle, forte chaleur, grand froid, séisme, préparation d’un départ et réseau indisponible. Cinquante étapes et vingt-deux questions avec plusieurs réponses orientent les actions. Retour à l’étape précédente, redémarrage, actions à cocher et raccourcis vers les modules ou les secours.
+- Après une première visite, toute l’application (code, guides, icônes) est conservée sur le téléphone. Les liens vers les sources officielles demandent une connexion.
+- **iPhone** : ouvre le site dans Safari, touche Partager, puis « Sur l’écran d’accueil ». **Android** : menu du navigateur, « Installer l’application ».
+- Une nouvelle version est annoncée par un message ; tu choisis quand l’appliquer. Tes données sont conservées.
+- Les données de la version précédente de VAULT (même adresse) sont reprises automatiquement.
 
-Les coches des guides ne sont conservées que dans la session courante et sont effacées en changeant de situation ou en recommençant. Les consignes locales et celles des secours priment. Les sources officielles sont liées dans chaque parcours ; leur consultation demande une connexion. Les textes des parcours sont inclus dans le cache hors ligne.
+## Limites à connaître
 
-## Signal Morse
+- **Lampe.** Le contrôle de la torche par un navigateur dépend du téléphone et du navigateur ; sur iPhone il est le plus souvent indisponible. VAULT vérifie la capacité annoncée par la caméra et le résultat des commandes, et le signale. Le son et la vibration restent utilisables (la vibration n’existe pas sur iPhone). L’écran ne clignote jamais.
+- **Morse.** L’émission et la lecture ont été vérifiées sur des signaux simulés (chronologie de la lampe, bips et flashs de test, bruit de fond). Un échange réel entre deux téléphones n’a pas encore été validé : fais d’abord un essai avec un proche.
+- **GPS et boussole.** Vérifiés avec des positions et des capteurs simulés. La boussole indique le nord magnétique ; en France l’écart avec le nord géographique n’est que de quelques degrés.
+- **Guides.** Ils résument les sources officielles citées dans chaque parcours (Sécurité civile, ministère de l’Intérieur, info.gouv.fr, Croix-Rouge, GRDF), vérifiées le 05/10/2026. Ils ne remplacent ni une formation aux gestes qui sauvent (PSC1), ni les consignes des secours ou des autorités, qui priment toujours. En cas de doute ou de danger : 112.
+- **Nutrition.** Les valeurs du catalogue d’aliments sont des moyennes indicatives : remplace-les par celles de l’étiquette. Les calories ne décrivent pas une alimentation équilibrée.
+- **Écoute acoustique.** Expérimentale : elle ne confirme ni n’exclut la présence d’une source précise (drone, moteur…).
 
-Émission Morse par la lampe arrière du téléphone, si la caméra expose le contrôle de torche dans le navigateur. Aucun flash de l’écran. Vérifier la lampe, tester son allumage pendant une seconde, puis émettre. Après le test, la lampe s’éteint et la caméra reste prête pour l’émission jusqu’à l’arrêt ou au changement d’onglet. Vitesse initiale : un point de 300 ms, à régler de la même façon sur le téléphone receveur. Répétition facultative. Les commandes trop lentes interrompent le signal et demandent de ralentir. Un test sur deux téléphones réels reste nécessaire pour valider les flashes et la réception. Réception des bips au microphone ou des flashes avec la caméra. Vitesse du point réglable et traduction de points/traits saisis. Le lecteur a été testé sur des signaux simulés ; un échange réel entre téléphones reste à valider.
+## Accessibilité
 
-Références techniques : [contrainte torch (MDN)](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#torch), [correctif WebKit concernant l’état de la torche](https://bugs.webkit.org/show_bug.cgi?id=280970). VAULT vérifie les capacités annoncées par la caméra et le résultat des commandes ; il ne se fie pas à getSettings().torch pour certifier l’allumage physique. Les pistes vidéo sont uniquement utilisées pour commander la lampe, sans traitement des images.
+Navigation au clavier, fenêtres avec piégeage du focus, noms accessibles sur toutes les commandes, cibles tactiles d’au moins 36 px, texte agrandissable jusqu’à 140 %, respect de la préférence « réduire les animations », contrastes contrôlés dans les quatre ambiances (sombre, clair, nuit, Low Profile).
 
-## Écoute acoustique
+## Crédits
 
-Analyse spectrale locale du niveau du microphone, de la fréquence dominante et des harmoniques. Cette analyse expérimentale ne confirme ni n’exclut la présence d’un drone ; des moteurs, ventilateurs et véhicules peuvent produire des signatures proches.
-
-## Confidentialité et utilisation
-
-Les réserves, la checklist et le profil restent dans le stockage local du navigateur (`vaultState`). Aucun compte applicatif nécessaire. Les signaux reçus ne sont pas conservés après rechargement. Aucun son ni aucune image ne sont enregistrés ou envoyés.
-
-Microphone et caméra : accès seulement après action explicite et autorisation du navigateur. Arrêt automatique en quittant le module ou en masquant la page. HTTPS ou localhost nécessaire.
-
-Les modules sont mis en cache pour l’utilisation hors ligne après un premier chargement réussi. Les appels et SMS nécessitent un service téléphonique disponible. L’émission nécessite une torche accessible par la caméra : la compatibilité dépend du téléphone et du navigateur. La lampe est arrêtée et la caméra libérée à la fin, sur Arrêter, lors d’un changement d’onglet, au masquage de la page ou en cas d’erreur. Garder le téléphone déverrouillé et l’application visible. Low Profile ne réduit pas la puissance de la lampe.
-
-## GitHub Pages
-
-Publication de la branche `main`, dossier `/ (root)`. Le fichier `.nojekyll` permet de servir directement les fichiers statiques.
-
-Sur iPhone : ouvrir le site dans Safari, puis Partager → Sur l’écran d’accueil.
-
-Une nouvelle adresse possède son propre stockage : les données enregistrées dans l’aperçu localhost ne sont pas transférées automatiquement sur GitHub Pages.
+Icônes [Lucide](https://lucide.dev) (licence ISC). Aucune police ni bibliothèque n’est téléchargée. Voir `VERIFICATION.md` pour le détail des contrôles effectués.

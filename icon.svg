@@ -1,4 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#070908"/>
-  <path d="M120 126h67l69 210 69-210h67L292 394h-72L120 126z" fill="#8da893"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#17221b"/><stop offset="1" stop-color="#070a08"/></linearGradient>
+    <linearGradient id="v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8e0cd"/><stop offset="1" stop-color="#8db397"/></linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".4" r=".62"><stop offset="0" stop-color="#9fc2a8" stop-opacity=".24"/><stop offset="1" stop-color="#9fc2a8" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#glow)"/>
+  <circle cx="256" cy="256" r="188" fill="none" stroke="#9fc2a8" stroke-opacity=".32" stroke-width="10"/>
+  <circle cx="256" cy="256" r="158" fill="none" stroke="#9fc2a8" stroke-opacity=".18" stroke-width="5" stroke-dasharray="2 19.4" stroke-linecap="round"/>
+  <path d="M130 140h64l62 190 62-190h64L292 386h-72z" fill="url(#v)"/>
 </svg>
