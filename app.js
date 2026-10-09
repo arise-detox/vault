@@ -169,6 +169,7 @@ const VaultIcons = (() => {
     { id: 's-purify', cat: 'water-food', label: 'Pastilles ou filtre pour rendre l’eau potable' },
     { id: 's-opener', cat: 'water-food', label: 'Ouvre-boîte manuel et couverts' },
     { id: 's-whistle', cat: 'power-comms', label: 'Sifflet (signal de détresse)' },
+    { id: 's-paperplan', cat: 'power-comms', label: 'Plan papier : abri, point de rendez-vous, numéros' },
     { id: 's-cables', cat: 'power-comms', label: 'Câbles et chargeurs de rechange' },
     { id: 's-spare', cat: 'power-comms', label: 'Piles de rechange' },
     { id: 's-crank', cat: 'power-comms', label: 'Lampe ou chargeur à manivelle ou solaire' },
@@ -358,6 +359,20 @@ const VaultIcons = (() => {
   ];
   const SAY_HINT = 'Reste en ligne et suis les instructions : les secours peuvent te guider pour les gestes.';
 
+  // Quand les numéros ne répondent plus (catastrophe, saturation, panne de réseau) : écran Urgences et dossier papier.
+  const NO_ANSWER = {
+    title: 'Si les numéros ne répondent plus',
+    intro: 'En catastrophe, les lignes saturent et les secours priorisent les urgences vitales. Garde les appels pour une vie en danger.',
+    steps: [
+      { title: 'Réessaie le 112', text: 'plusieurs fois, depuis un endroit dégagé ou en hauteur.' },
+      { title: 'Écris au 114', text: 'un SMS demande moins de réseau qu’un appel.' },
+      { title: 'Change de téléphone', text: 'fixe, voisin, autre opérateur.' },
+      { title: 'Va sur place', text: 'pompiers, gendarmerie, mairie, si tu peux te déplacer sans danger.' },
+      { title: 'Fais-toi repérer', text: 'fenêtre, lampe, sifflet, SOS en Morse.' },
+    ],
+    news: 'Pour donner des nouvelles : un SMS court. Pour t’informer : radio à piles, canaux officiels.',
+  };
+
   /** Texte prêt à envoyer par SMS au 114 (ou à lire au 112). */
   function buildMessage(data) {
     const nature = (NATURES.find(n => n.id === data.nature) || NATURES[4]).text;
@@ -373,7 +388,7 @@ const VaultIcons = (() => {
   /** Lien SMS compatible Android et iPhone. */
   const smsLink = (number, body) => 'sms:' + number + '?&body=' + encodeURIComponent(body);
 
-  return { MAIN, SMS, OTHER, NATURES, SAY_STEPS, SAY_HINT, buildMessage, smsLink };
+  return { MAIN, SMS, OTHER, NATURES, SAY_STEPS, SAY_HINT, NO_ANSWER, buildMessage, smsLink };
 });
 
 
@@ -392,6 +407,9 @@ const VaultIcons = (() => {
   const croix = slug => 'https://www.croix-rouge.fr/les-gestes-de-premiers-secours/' + slug;
   const GQS = ['Ministère de l’Intérieur — gestes qui sauvent', 'https://www.interieur.gouv.fr/content/download/105174/832517/file/2022%20GQS.pdf'];
   const PSC = ['Ministère de l’Intérieur — référentiel PSC1', 'https://www.interieur.gouv.fr/content/download/111131/888067/file/2022%20PSC1.pdf'];
+  const tousResp = ['info.gouv.fr — guide « Tous responsables » et kit d’urgence', 'https://www.info.gouv.fr/risques/se-preparer-a-une-situation-durgence'];
+  const alertSrc = ['Sécurité civile — système d’alerte des populations', civil + 'comment-se-preparer-face-aux-risques/systeme-dalerte-des'];
+  const CONFLICT_NOTE = 'Les textes officiels français ne détaillent pas chaque situation de guerre. Ce parcours reprend les règles d’alerte du guide « Tous responsables » (lu le 9 octobre 2026) et les règles courantes de mise à l’abri. Les consignes des autorités locales priment toujours.';
   const FORMATION = 'Ces gestes ne remplacent pas une formation : les gestes qui sauvent et le PSC1 (formation de 7 heures) s’apprennent près de chez toi.';
 
   const option = (label, next) => ({ label, next });
@@ -406,6 +424,7 @@ const VaultIcons = (() => {
     { id: 'natural', label: 'Risques naturels', icon: 'cloud-lightning' },
     { id: 'network', label: 'Réseaux et ressources', icon: 'plug' },
     { id: 'alerts', label: 'Alertes et départ', icon: 'bell' },
+    { id: 'conflict', label: 'Guerre et conflit', icon: 'siren' },
   ];
 
   // Gestes à garder à portée de main sur l'accueil.
@@ -580,10 +599,22 @@ const VaultIcons = (() => {
       keywords: 'téléphone réseau internet panne communication radio morse',
       sources: [kit, ['Service public — numéros d’urgence', 'https://www.service-public.gouv.fr/particuliers/vosdroits/F33954']], nodes: {
         start: node('Distinguer urgence et information', [], 'Une personne est-elle en danger immédiat ?', [option('Oui', 'urgent'), option('Non', 'contact')]),
-        urgent: node('Chercher à alerter', ['Essaie le 112. Si l’appel échoue, demande à une personne disposant d’un moyen de communication d’alerter les secours, sans t’exposer.'], '', [], [call('Appeler le 112', '112'), go('Mes numéros d’urgence', 'emergency')]),
+        urgent: node('Chercher à alerter', ['Essaie le 112. Si l’appel échoue, demande à une personne disposant d’un moyen de communication d’alerter les secours, sans t’exposer.'], '', [], [call('Appeler le 112', '112'), guide('Les numéros ne répondent pas', 'nonumbers'), go('Mes numéros d’urgence', 'emergency')]),
         contact: node('Conserver les moyens disponibles', ['Économise la batterie et utilise la radio autonome pour les annonces.', 'Si le réseau le permet, transmets un message court à ton contact convenu. Garde les coordonnées importantes sur papier.'], 'As-tu convenu d’un contact ou d’un point de rendez-vous ?', [option('Oui', 'plan'), option('Non', 'prepare')]),
         plan: node('Suivre le plan convenu', ['Utilise le contact et le lieu prévus seulement si les conditions et les consignes locales le permettent.'], '', [], [go('Signal Morse', 'tools/signal'), go('Mon plan', 'prepare/plan')]),
         prepare: node('Préparer les contacts', ['Ajoute les contacts hors ligne et la radio à ton kit. Le Morse peut échanger un message entre personnes équipées ; il ne garantit pas qu’un appel de secours sera reçu.'], '', [], [go('Ma checklist', 'prepare/kit'), go('Mon plan', 'prepare/plan'), go('Signal Morse', 'tools/signal')]),
+      } },
+
+    { id: 'nonumbers', cat: 'network', icon: 'phone', title: 'Les numéros ne répondent pas', description: 'Catastrophe, réseau saturé ou en panne : joindre les secours autrement.',
+      keywords: 'urgence 112 15 17 18 saturé panne téléphone réseau coupé appel sms 114 catastrophe',
+      note: 'Quand beaucoup de monde appelle ou qu’un réseau tombe, les secours priorisent les urgences vitales. Ces astuces augmentent tes chances, sans les garantir. Une consigne des secours ou des autorités prime toujours.',
+      sources: [tousResp, ['Service public — numéros d’urgence', 'https://www.service-public.gouv.fr/particuliers/vosdroits/F33954']], nodes: {
+        start: node('Distinguer vie en danger et autre besoin', ['En cas de crise majeure, les lignes se saturent et les secours choisissent leurs interventions selon la gravité. Le guide officiel demande à chacun de pouvoir se protéger et protéger ses proches plusieurs jours en les attendant.'], 'Une personne est-elle en danger de mort immédiat (ne respire plus, hémorragie, incendie, noyade) ?', [option('Oui', 'try'), option('Non', 'calm')]),
+        try: node('Joindre les secours autrement', ['Réessaie le 112, plusieurs fois : une ligne saturée peut passer au deuxième ou au dixième essai. Déplace-toi vers un endroit dégagé ou en hauteur. En principe, le 112 peut emprunter le réseau d’un autre opérateur si le tien est en panne.', 'Écris un SMS au 114 : adresse, nature de l’urgence, nombre de victimes. Un SMS demande moins de réseau qu’un appel, mais il peut être retardé. Le message prêt à envoyer est dans l’écran Urgences.', 'Essaie un autre téléphone : fixe, téléphone d’un voisin ou d’un autre opérateur.', 'Si rien ne passe et que tu peux te déplacer sans danger, va directement à la caserne de pompiers, à la gendarmerie, au commissariat, à la mairie ou à l’hôpital le plus proche.', 'Demande de l’aide autour de toi : voisins, passants, personnes formées aux premiers secours. En attendant, applique les gestes qui sauvent.'], '', [option('Rien ne passe : me faire repérer', 'signal')], [call('Appeler le 112', '112'), go('Écrire au 114', 'emergency'), guide('Arrêt cardiaque', 'cardiac'), guide('Saignement abondant', 'bleeding')]),
+        signal: node('Se faire repérer', ['Reste visible depuis la rue : fenêtre ou balcon, tissu clair, lampe la nuit. Ne t’expose pas si un danger extérieur est présent.', 'Signal de détresse : trois signaux courts, trois longs, trois courts (SOS), à la lampe, au sifflet ou en frappant sur une surface ; répète à intervalles. L’outil Signal de VAULT l’émet pour toi.', 'Écris sur une feuille ton nom, le nombre de personnes et le besoin, et affiche-la à ta fenêtre ou sur ta porte.', 'Aucun de ces moyens ne garantit d’être vu ou entendu : continue d’essayer plusieurs voies.'], '', [], [go('Signal Morse SOS', 'tools/signal'), go('Alarme sonore', 'tools/alarm')]),
+        calm: node('Ne pas saturer les réseaux', ['Réserve les appels aux urgences vitales. Pour donner de tes nouvelles, envoie un SMS court plutôt que d’appeler, et évite vidéos, photos et réseaux sociaux.', 'Informe-toi par la radio à piles ou l’autoradio : radio locale de service public (réseau ici, anciennement France Bleu), France Info, télévision publique. Les sirènes, FR-Alert et les haut-parleurs peuvent aussi donner des consignes. N’écoute que les canaux officiels.', 'Ne compte pas sur internet ni sur le téléphone : le guide officiel prévient que ces réseaux peuvent ne plus fonctionner. Garde les numéros de tes proches sur papier.', 'Économise la batterie : luminosité au minimum, mode économie d’énergie, applications fermées ; consulte tes messages à intervalles plutôt qu’en continu.'], 'As-tu un point de rendez-vous convenu avec tes proches ?', [option('Oui', 'meet'), option('Non', 'nomeet')]),
+        meet: node('Suivre le plan convenu', ['Rends-toi au lieu convenu seulement si les consignes locales le permettent (reste à l’abri en cas d’alerte).', 'Laisse un mot visible à ton domicile : où tu vas, avec qui, à quelle heure.'], '', [], [go('Mon plan', 'prepare/plan'), go('Signal Morse', 'tools/signal')]),
+        nomeet: node('Fixer un rendez-vous dès que possible', ['Quand les réseaux fonctionnent, convenez d’un lieu proche (domicile d’un proche, mairie), d’un lieu plus lointain, et d’un contact hors de la zone qui centralise les nouvelles.', 'Note-les sur papier dans ton kit : le dossier papier de VAULT les reprend.'], '', [], [go('Mon plan', 'prepare/plan'), go('Ma checklist', 'prepare/kit')]),
       } },
 
     // ------------------------------------------------------------------ alertes et départ
@@ -616,6 +647,41 @@ const VaultIcons = (() => {
         ordered: node('Suivre le départ indiqué', ['Suis la destination et les consignes annoncées.', 'Emporte ton kit accessible : eau, nourriture sans cuisson, traitements, documents, clés, lampe et moyens de communication. Ne retarde pas le départ pour récupérer des objets.'], '', [], [go('Ma checklist', 'prepare/kit')]),
         prepare: node('Préparer le kit accessible', ['Regroupe les ressources essentielles et vérifie régulièrement piles, consommables et dates.'], '', [], [go('Compléter ma checklist', 'prepare/kit'), go('Vérifier mes réserves', 'prepare/stock')]),
         danger: node('Choisir les consignes du danger', ['Les actions diffèrent selon le danger. Choisis le parcours correspondant ou appelle le 112 en danger immédiat.'], '', [], [call('Appeler le 112', '112')]),
+      } },
+
+    // ------------------------------------------------------------------ guerre et conflit
+    { id: 'missile', cat: 'conflict', icon: 'siren', title: 'Tir de missile, frappe ou bombardement', description: 'Alerte en cours : où se mettre à l’abri, quoi faire pendant et après.',
+      keywords: 'guerre missile drone bombe bombardement explosion frappe attaque aérienne sirène alerte abri roquette obus',
+      note: CONFLICT_NOTE,
+      sources: [tousResp, alertSrc], nodes: {
+        start: node('Se mettre à l’abri sans attendre', ['Dès la sirène ou un message FR-Alert, agis tout de suite. Règles d’alerte du guide officiel : ne reste pas dans un véhicule, ne reste pas près des fenêtres et ne les ouvre pas, n’allume aucune flamme, ne quitte pas ton abri sans consigne des autorités.', 'Évite de téléphoner pour laisser les réseaux libres aux secours. Ne va pas chercher tes enfants à l’école : ils y sont pris en charge.'], 'Où es-tu en ce moment ?', [option('Dans un bâtiment', 'inside'), option('Dehors', 'outside'), option('Dans un véhicule', 'vehicle')]),
+        inside: node('Rejoindre la pièce la plus sûre', ['Descends vers le niveau le plus bas : cave ou sous-sol si tu y accèdes vite et sans risque, sinon rez-de-chaussée ou étage bas. N’utilise pas l’ascenseur.', 'Choisis une pièce intérieure sans fenêtre ou un couloir, le plus loin possible des façades, des vitres et des baies. Ferme les portes de la pièce.', 'Prends ton kit, ta radio, ta lampe et ton téléphone. Garde avec toi les enfants et les personnes fragiles.', 'Si tu entends une explosion proche, jette-toi au sol à plat ventre, loin des vitres, le visage protégé et les mains sur la nuque.', 'N’allume ni bougie ni flamme. Si tu peux le faire sans risque, coupe le gaz.'], '', [option('Je suis à l’abri : et maintenant ?', 'wait')], [guide('Choisir son abri à l’avance', 'shelter')]),
+        outside: node('Rejoindre un bâtiment en dur', ['Entre dans le bâtiment solide le plus proche (immeuble, commerce, station de métro) : un mur épais protège mieux qu’un lieu ouvert. Va vers le sous-sol ou le niveau le plus bas.', 'Si aucun bâtiment n’est à portée : éloigne-toi des vitres, des véhicules et des façades, et couche-toi à plat ventre dans un creux (fossé, bas-côté), le visage protégé et les mains sur la nuque.', 'Ne te regroupe pas en foule et ne reste pas à découvert pour regarder ou filmer.'], '', [option('Je suis à l’abri : et maintenant ?', 'wait')]),
+        vehicle: node('Quitter le véhicule', ['Gare-toi dès que tu peux sans bloquer la route, coupe le moteur, quitte le véhicule et rejoins le bâtiment solide le plus proche. Le guide officiel est clair : ne reste pas dans un véhicule.', 'Si aucun bâtiment n’est visible, éloigne-toi du véhicule et couche-toi à plat ventre dans un creux, les mains sur la nuque.'], '', [option('Je suis dans un bâtiment', 'inside'), option('Je suis dehors, sans bâtiment proche', 'outside')]),
+        wait: node('Rester à l’abri jusqu’à la fin de l’alerte', ['Reste à l’abri jusqu’à l’annonce officielle de fin d’alerte (signal continu de 30 secondes, message FR-Alert ou radio). D’autres tirs ou explosions peuvent suivre : ne sors pas juste après une explosion.', 'Écoute les consignes à la radio (radio locale de service public « ici », France Info) ou à la télévision publique. N’écoute que les canaux officiels.', 'Pour rassurer tes proches, envoie un SMS très court (« Je suis en sécurité ») plutôt que d’appeler. Économise la batterie du téléphone.'], 'Où en es-tu ?', [option('La fin d’alerte est annoncée', 'after'), option('Quelqu’un est blessé', 'injured')], [guide('Les numéros ne répondent pas', 'nonumbers')]),
+        injured: node('Aider un blessé', ['Si tu peux le faire sans quitter l’abri, applique les gestes de premiers secours : arrête un saignement en comprimant, surveille la respiration.', 'N’appelle le 15 ou le 112 que pour une urgence vitale, en donnant ton adresse. En cas de crise, les secours priorisent selon la gravité.'], '', [], [guide('Saignement abondant', 'bleeding'), guide('Arrêt cardiaque', 'cardiac'), guide('Personne inconsciente', 'unconscious'), call('Appeler le 15', '15'), call('Appeler le 112', '112')]),
+        after: node('Après la frappe', ['Ne t’approche pas de la zone touchée : nouvelles frappes, effondrement, incendie, gaz et fils électriques sont possibles.', 'Ne touche à aucun débris suspect ni objet métallique inconnu (munition non explosée) : éloigne-toi et signale-le aux autorités dès que possible.', 'Vérifie que tes proches vont bien, soigne les blessés, puis prends contact avec eux par SMS.', 'Ne diffuse pas de photos ni d’informations non officielles : n’écoute et ne relaie que les annonces des pouvoirs publics.'], '', [], [guide('Saignement abondant', 'bleeding'), guide('Feu ou fumée', 'fire'), guide('Odeur de gaz', 'gas'), call('Appeler le 112', '112')]),
+      } },
+    { id: 'war', cat: 'conflict', icon: 'shield-check', title: 'Conflit armé : que faire ?', description: 'Se préparer, tenir quelques jours, rester informé et trier les informations.',
+      keywords: 'guerre conflit armé invasion combats tirs crise rumeurs désinformation pénurie résilience',
+      note: CONFLICT_NOTE,
+      sources: [tousResp, alertSrc], nodes: {
+        start: node('Évaluer ta situation', ['Un conflit armé peut avoir des effets directs (alertes, frappes, combats) et indirects : coupures d’eau, d’électricité et de réseaux, pénuries, désinformation. Le guide officiel demande à chacun de pouvoir tenir plusieurs jours par ses propres moyens.'], 'Quelle est ta situation ?', [option('Rien ne s’est produit : je me prépare', 'prepare'), option('Les autorités ont donné une consigne', 'official'), option('Des tirs ou des combats ont lieu près de moi', 'fire'), option('Eau, électricité ou réseaux sont coupés', 'cut'), option('Je veux vérifier une information', 'info')]),
+        prepare: node('Se préparer avant', ['Constitue le kit 72 h, à garder facile d’accès, et vérifie-le deux fois par an : eau, nourriture sans cuisson, médicaments, lampe, radio à piles, batterie externe, argent liquide, copies de documents.', 'Choisis ton abri à l’avance et repère à pied un deuxième itinéraire. Note un point de rendez-vous avec tes proches et un contact hors de ta zone.', 'Sache couper l’eau, l’électricité et le gaz. Garde le réservoir de ta voiture assez plein : des pénuries de carburant sont possibles.', 'Repère les personnes isolées ou fragiles autour de toi : l’entraide du voisinage est essentielle en cas de crise.'], '', [], [go('Ma checklist', 'prepare/kit'), go('Mon stock', 'prepare/stock'), go('Mon plan', 'prepare/plan'), guide('Choisir son abri à l’avance', 'shelter')]),
+        official: node('Suivre les consignes officielles', ['Ton action la plus efficace : rester informé en permanence par la radio (radio locale de service public « ici »), la télévision publique, FR-Alert, les sirènes et les messages au porte-voix.', 'Reste où tu es jusqu’à ce que la sécurité soit assurée ou que l’on te donne l’ordre d’évacuer. L’ordre d’évacuation n’est donné que si les autorités estiment que tu es en danger.', 'En cas d’évacuation : kit d’urgence, médicaments et ordonnances, papiers d’identité de chacun et copies, téléphone ; verrouille ton domicile et suis les itinéraires indiqués.'], '', [], [guide('Sirène ou FR-Alert', 'alert'), guide('Préparer un départ', 'evacuation')]),
+        fire: node('Tirs ou combats à proximité', ['Reste à l’intérieur, dans une pièce intérieure ou au sous-sol, loin des fenêtres. Ne sors pas pour regarder ou filmer.', 'Évite de te montrer aux fenêtres ; si tu dois éclairer, limite la lumière visible de l’extérieur.', 'Ne te déplace que sur consigne des autorités ou si ta vie est menacée. Évite alors les axes principaux, les ponts, les sites militaires et industriels.', 'En cas de menace directe d’hommes armés, applique : s’échapper, se cacher, alerter.'], '', [], [guide('Tir de missile ou frappe', 'missile'), guide('Attaque ou fusillade', 'attack'), guide('Préparer un départ', 'evacuation'), call('Appeler le 112', '112')]),
+        cut: node('Services coupés', ['Chaque coupure a son parcours : électricité, eau, réseaux. En cas de crise majeure, les secours sont débordés et il faut tenir seul plusieurs jours.', 'Les paiements par carte et les distributeurs peuvent être en panne : l’argent liquide en petites coupures sert.'], '', [], [guide('Plus d’électricité', 'power'), guide('Eau indisponible', 'water'), guide('Réseau indisponible', 'communication'), guide('Les numéros ne répondent pas', 'nonumbers')]),
+        info: node('Trier l’information', ['Pose-toi quatre questions : qui a envoyé cette information ? La source est-elle officielle ? Est-elle publiée par un grand média national ? Quel est son but ?', 'En crise, n’écoute et ne prends en compte que les annonces des pouvoirs publics (gouvernement, préfecture, mairie). De fausses vidéos, parfois générées par IA, peuvent circuler.', 'Ne propage aucune rumeur. Tu peux signaler un contenu illicite sur la plateforme Pharos (internet-signalement.gouv.fr).'], '', [], [guide('Sirène ou FR-Alert', 'alert')]),
+      } },
+    { id: 'shelter', cat: 'conflict', icon: 'building-2', title: 'Choisir son abri à l’avance', description: 'Repérer la pièce la plus protégée de chez soi et l’équiper.',
+      keywords: 'abri cave sous-sol refuge pièce confinement bombardement guerre préparer',
+      note: CONFLICT_NOTE + ' La France compte très peu d’abris collectifs prévus pour la population : renseigne-toi auprès de ta mairie (DICRIM, plan communal de sauvegarde).',
+      sources: [tousResp, alertSrc], nodes: {
+        start: node('Repérer l’endroit le plus protégé', ['Le principe : le niveau le plus bas, au centre du bâtiment, sans fenêtre, loin des façades et des vitres. Choisis l’abri maintenant, pas pendant l’alerte.'], 'Où habites-tu ?', [option('Maison avec cave ou sous-sol', 'cellar'), option('Immeuble', 'building'), option('Maison de plain-pied, sans sous-sol', 'ground')]),
+        cellar: node('Cave ou sous-sol', ['Vérifie que le chemin est dégagé et que tu peux y descendre en quelques secondes avec ton kit.', 'Ne t’y réfugie pas en cas d’inondation, ni en cas de fuite de gaz ou de fumée. Vérifie aussi que l’endroit est aéré et sec.'], '', [option('Que garder dans l’abri ?', 'ready')]),
+        building: node('Immeuble', ['Cave collective ou niveau bas si le gardien ou le syndic confirme qu’elle est accessible et sûre ; sinon, pièce intérieure ou palier sans fenêtre, aux étages bas.', 'Évite l’ascenseur et les étages élevés. Connais tes voisins et préviens les personnes fragiles de l’immeuble.'], '', [option('Que garder dans l’abri ?', 'ready')]),
+        ground: node('Maison de plain-pied', ['Choisis une pièce intérieure sans fenêtre (couloir, salle de bain, cellier) entourée de murs épais, loin des vitres, des baies et des portes extérieures.'], '', [option('Que garder dans l’abri ?', 'ready')]),
+        ready: node('Équiper l’abri', ['À portée de l’abri : eau, nourriture sans cuisson, radio à piles, lampe, batterie externe, trousse de premiers secours, couvertures, médicaments, argent liquide, copies de documents.', 'Entraîne tout le foyer : chacun sait où aller et en combien de temps.', 'Renseigne-toi auprès de ta mairie sur les abris éventuels ; ne compte pas sur un abri public à côté de chez toi sans l’avoir vérifié.'], '', [], [go('Ma checklist', 'prepare/kit'), go('Mon plan', 'prepare/plan'), guide('Tir de missile ou frappe', 'missile')]),
       } },
   ];
 
@@ -1649,7 +1715,7 @@ const VaultIcons = (() => {
  * apparence (thème, Low Profile, taille du texte). Aucune vue ici : chaque écran s'enregistre dans 5x-view-*.js. */
 const Vault = {
   version: '2.0.0',
-  build: '550a6562e6',
+  build: 'e959171fc7',
   store: null,
   views: {},
   order: [],
@@ -3297,6 +3363,10 @@ Vault.registerView((() => {
             N.OTHER.map(n => '<a class="row" href="tel:' + n.num + '"><span class="row-icon">' + UI.icon('phone') + '</span><span class="row-main"><span class="row-title">' + n.num + ' · ' + UI.esc(n.title) + '</span><span class="row-sub">' + UI.esc(n.desc) + '</span></span></a>').join('') +
           '</div></details></section>' +
 
+        '<article class="card" aria-labelledby="noans-title"><div class="card-head"><div><div class="label">Catastrophe, réseau saturé</div><h2 id="noans-title">' + UI.esc(N.NO_ANSWER.title) + '</h2></div></div><p class="muted">' + UI.esc(N.NO_ANSWER.intro) + '</p>' +
+          '<ol class="steps">' + N.NO_ANSWER.steps.map(s => '<li><b>' + UI.esc(s.title) + ' :</b> ' + UI.esc(s.text) + '</li>').join('') + '</ol><p class="hint">' + UI.esc(N.NO_ANSWER.news) + '</p>' +
+          '<div class="actions-grid mt"><button type="button" class="btn btn-primary" data-go="guides/nonumbers">' + UI.icon('book-open') + 'Voir le guide</button><button type="button" class="btn btn-ghost" data-go="tools/signal">' + UI.icon('radio-tower') + 'Signal SOS</button></div></article>' +
+
         '<article class="card" aria-labelledby="say-title"><div class="card-head"><div><div class="label">Que dire aux secours</div><h2 id="say-title">Préparer mon message</h2></div></div>' +
           '<ol class="steps">' + N.SAY_STEPS.map(s => '<li><b>' + UI.esc(s.title) + ' :</b> ' + UI.esc(s.text) + '</li>').join('') + '</ol><p class="hint">' + UI.esc(N.SAY_HINT) + '</p>' +
           '<div class="hr"></div>' +
@@ -3406,7 +3476,8 @@ Vault.registerView((() => {
     const rows = N.MAIN.concat([N.SMS], N.OTHER);
     return '<h1>Numéros d’urgence — France</h1><p class="muted">À garder avec ton kit. En danger ou en cas de doute : 112.</p>' +
       '<table><tr><th>Numéro</th><th>Service</th><th>Quand l’utiliser</th></tr>' + rows.map(n => '<tr><td class="big">' + UI.esc(n.num) + '</td><td>' + UI.esc(n.title) + '</td><td>' + UI.esc(n.desc) + '</td></tr>').join('') + '</table>' +
-      '<h2>Que dire aux secours</h2><ol class="p-steps">' + N.SAY_STEPS.map(s => '<li><b>' + UI.esc(s.title) + ' :</b> ' + UI.esc(s.text) + '</li>').join('') + '</ol><p>' + UI.esc(N.SAY_HINT) + '</p>';
+      '<h2>Que dire aux secours</h2><ol class="p-steps">' + N.SAY_STEPS.map(s => '<li><b>' + UI.esc(s.title) + ' :</b> ' + UI.esc(s.text) + '</li>').join('') + '</ol><p>' + UI.esc(N.SAY_HINT) + '</p>' +
+      '<h2>' + UI.esc(N.NO_ANSWER.title) + '</h2><p>' + UI.esc(N.NO_ANSWER.intro) + '</p><ol class="p-steps">' + N.NO_ANSWER.steps.map(s => '<li><b>' + UI.esc(s.title) + ' :</b> ' + UI.esc(s.text) + '</li>').join('') + '</ol><p>' + UI.esc(N.NO_ANSWER.news) + '</p>';
   }
   Vault.paper.numbers = numbersHtml;
   Vault.paper.ice = () => iceHtml(Vault.store.get());

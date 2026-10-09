@@ -1,12 +1,12 @@
 /* VAULT — service worker : l'application complète est mise en cache pour fonctionner sans réseau.
- * Version de cache : vault-2.0.0-550a6562e6 (elle change à chaque modification de l'application). */
-const CACHE = 'vault-2.0.0-550a6562e6';
+ * Version de cache : vault-2.0.0-e959171fc7 (elle change à chaque modification de l'application). */
+const CACHE = 'vault-2.0.0-e959171fc7';
 const PREFIX = 'vault-';
 const ASSETS = [
   "./",
   "./index.html",
-  "./app.js?v=550a6562e6",
-  "./styles.css?v=550a6562e6",
+  "./app.js?v=e959171fc7",
+  "./styles.css?v=e959171fc7",
   "./manifest.webmanifest",
   "./icon.svg",
   "./icons/icon-192.png",

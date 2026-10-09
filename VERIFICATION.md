@@ -8,7 +8,7 @@ Ce document dit ce qui a été contrôlé, comment, et ce qui ne l’a **pas** �
 
 | Domaine | Tests | Ce qui est contrôlé |
 | --- | ---: | --- |
-| Données et calculs | 16 | Reprise d’une sauvegarde de la V1 (une V1 jamais modifiée repart de zéro au lieu d’afficher des réserves d’exemple), état vierge sans réserve supposée, saisies hostiles nettoyées, enregistrement, stockage plein, calculs identiques à la V1 (score, autonomie), règles DLC / DDM, besoins du foyer, cohérence des 23 guides (étapes atteignables, numéros valides, sources en https) et du catalogue d’aliments (calories cohérentes avec les macronutriments). |
+| Données et calculs | 16 | Reprise d’une sauvegarde de la V1 (une V1 jamais modifiée repart de zéro au lieu d’afficher des réserves d’exemple), état vierge sans réserve supposée, saisies hostiles nettoyées, enregistrement, stockage plein, calculs identiques à la V1 (score, autonomie), règles DLC / DDM, besoins du foyer, cohérence des 27 guides (étapes atteignables, numéros valides, sources en https) et du catalogue d’aliments (calories cohérentes avec les macronutriments). |
 | Code Morse | 18 | Encodage, durées (point 1, trait 3, pauses 1 / 3 / 7), signaux de procédure, traduction, décodage adaptatif de 80 à 700 ms avec variations de durée, parasites et échantillonnage de caméra, plusieurs messages, vitesse mal réglée. |
 | Position | 11 | Distance et cap (Paris–Lyon, points cardinaux), formats de coordonnées, cap de la boussole téléphone à plat ou à la verticale, lissage ; analyse acoustique (jamais de conclusion sur la source). |
 | Détection de bips et de flashs | 9 | Signal audio simulé passé dans une vraie FFT : bips propres, dans le bruit, bruit fort au départ (seuil qui ne se fige pas), de 100 à 1 200 ms le point, hauteur qui dérive, seuil manuel, flashs de caméra. |
@@ -27,11 +27,11 @@ Ce document dit ce qui a été contrôlé, comment, et ce qui ne l’a **pas** �
 - Poids du site : environ 790 Ko (code 394 Ko, feuille de styles 49 Ko, icônes 360 Ko), mis en cache en entier au premier chargement.
 - Volume maximal accepté (300 aliments, 30 contacts, 50 points) : une modification de quantité prend environ 35 ms sur ordinateur ; la liste ne recrée que les lignes modifiées.
 - Impressions (kit, plan, fiche d’urgence, liste d’achats) relues en aperçu : noir sur blanc, lisibles.
-- Contenu : 23 guides, 104 étapes, 37 questions, 30 sources distinctes ; 35 modèles d’aliments ; 12 éléments de kit de base, 14 compléments, 6 contrôles périodiques.
+- Contenu : 27 guides, 128 étapes, 43 questions, 31 sources distinctes ; 35 modèles d’aliments ; 12 éléments de kit de base, 15 compléments, 6 contrôles périodiques.
 
 ## 2. Sources officielles des guides
 
-Chaque consigne a été relue dans les textes officiels ci-dessous le 05/10/2026. Le 06/10/2026, les 30 adresses répondaient (17 par un contrôle automatique, 13 ouvertes dans un navigateur : ces sites refusent les robots). Ces textes peuvent évoluer : en cas de différence, la source officielle prime.
+Chaque consigne a été relue dans les textes officiels ci-dessous le 05/10/2026 ; les guides « guerre et conflit » et « Les numéros ne répondent pas » l’ont été le 09/10/2026 d’après le guide « Tous responsables » (info.gouv.fr). Le 06/10/2026 (09/10/2026 pour la source ajoutée), les 31 adresses répondaient (17 par un contrôle automatique, 14 ouvertes dans un navigateur : ces sites refusent les robots). Ces textes peuvent évoluer : en cas de différence, la source officielle prime.
 
 | Source | Guides concernés |
 | --- | --- |
@@ -60,8 +60,9 @@ Chaque consigne a été relue dans les textes officiels ci-dessous le 05/10/2026
 | [Enedis — dépannage et urgences](https://www.enedis.fr/aide-contact/depannage-et-urgences) | Plus d’électricité |
 | [Ministère de la Santé — eau du robinet](https://sante.gouv.fr/sante-et-environnement/eaux/article/eau-du-robinet) | Eau indisponible |
 | [Sécurité civile — kit d’urgence 72 h](https://www.securite-civile.interieur.gouv.fr/reagir/comment-se-preparer-face-aux-risques/kit-durgence) | Eau indisponible, Réseau indisponible, Préparer un départ |
-| [Service public — numéros d’urgence](https://www.service-public.gouv.fr/particuliers/vosdroits/F33954) | Réseau indisponible |
-| [Sécurité civile — système d’alerte des populations](https://www.securite-civile.interieur.gouv.fr/reagir/comment-se-preparer-face-aux-risques/systeme-dalerte-des) | Sirène ou FR-Alert |
+| [Service public — numéros d’urgence](https://www.service-public.gouv.fr/particuliers/vosdroits/F33954) | Réseau indisponible, Les numéros ne répondent pas |
+| [info.gouv.fr — guide « Tous responsables » et kit d’urgence](https://www.info.gouv.fr/risques/se-preparer-a-une-situation-durgence) | Les numéros ne répondent pas, Tir de missile, frappe ou bombardement, Conflit armé : que faire ?, Choisir son abri à l’avance |
+| [Sécurité civile — système d’alerte des populations](https://www.securite-civile.interieur.gouv.fr/reagir/comment-se-preparer-face-aux-risques/systeme-dalerte-des) | Sirène ou FR-Alert, Tir de missile, frappe ou bombardement, Conflit armé : que faire ?, Choisir son abri à l’avance |
 | [FR-Alert](https://fr-alert.gouv.fr) | Sirène ou FR-Alert |
 | [Sécurité civile — accident industriel](https://www.securite-civile.interieur.gouv.fr/reagir/risques-majeurs/accident-industriel) | Alerte industrielle |
 | [Sécurité civile — accident nucléaire](https://www.securite-civile.interieur.gouv.fr/reagir/risques-majeurs/accident-nucleaire) | Accident nucléaire |
